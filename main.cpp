@@ -2,69 +2,83 @@
 //
 
 #include "stdafx.h"
-#include<SDL.h>
-#include<SDL_image.h>
+#include "Commonfunc.h"
+#include "BaseObject.h"
 
-#include "stdafx.h"
-#include <SDL.h>
-#include <SDL_image.h>
+BaseObject g_background;
 
-
-SDL_Window* g_windows = NULL;
-SDL_Surface* gScreenSurface = NULL;
-SDL_Surface* g_background = NULL;
-
-
-bool loadMedia()
+bool InitData()
 {
-    bool success = true;
-    g_background = IMG_Load("background.png" );
-    if( g_background == NULL )
-    {
-        success = false;
-    }
+	bool success = true;
+	int ret = SDL_Init(SDL_INIT_VIDEO);
+	if (ret < 0) return false;
+	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
 
-    return success;
+	g_window = SDL_CreateWindow("Game Cpp SDL 2.0 Blog: Chinn Chinn",
+		                          SDL_WINDOWPOS_UNDEFINED, 
+								  SDL_WINDOWPOS_UNDEFINED, 
+								  SCREEN_WIDTH, SCREEN_WIDTH,
+								  SDL_WINDOW_SHOWN);
+	if(g_window == NULL){
+		success = false;
+	} else {
+		g_screen = SDL_CreateRenderer(g_window, -1, SDL_RENDERER_ACCELERATED);
+	if(g_screen = NULL)
+	{
+		success = NULL;
+	} else {
+		SDL_SetRenderDrawColor(g_screen,  RENDER_DRAW_COLOR,  RENDER_DRAW_COLOR, RENDER_DRAW_COLOR,  RENDER_DRAW_COLOR);
+		int imgFlags = IMG_INIT_JPG;
+		if(!(IMG_Init(imgFlags) && imgFlags))
+			success = false;
+	}
+	}
+	return success;
 }
 
+bool LoadBackground()
+{
+	bool ret = g_background.LoadImg("img//background.png", g_screen);
+	if(ret == false)
+		return false;
+	return true;
+}
 
 void close()
 {
-    SDL_FreeSurface( g_background );
-    g_background = NULL;
-    SDL_DestroyWindow( g_windows );
-    g_windows = NULL;
-    SDL_Quit();
+	g_background.Free();
+
+	SDL_DestroyRenderer(g_screen);
+	g_screen = NULL;
+
+	SDL_DestroyWindow(g_window);
+	g_window = NULL;
+	IMG_Quit();
+	SDL_Quit();
 }
-
-bool init()
-{
-    bool success = true;
-    if( SDL_Init( SDL_INIT_VIDEO ) >= 0 )
-    {
-        g_windows = SDL_CreateWindow( "SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1280, 960, SDL_WINDOW_SHOWN );
-        if( g_windows != NULL )
-        {
-            gScreenSurface = SDL_GetWindowSurface(g_windows);
-        }
-    }
-    return success;
-}
-
-
 int main(int argc, char* argv[])
 {
-    if(init() == true)
-    {
-        if(loadMedia())
-        {
-            SDL_BlitSurface( g_background, NULL, gScreenSurface, NULL );
-            SDL_UpdateWindowSurface(g_windows);
-            SDL_Delay(2000);
-        }
-    }
+	if(InitData() == false)
+		return -1;
+	if(LoadBackground() == false)
+		return -1;
+	bool is_quit = false;
+	while (!is_quit)
+	{
+		while (SDL_PollEvent(&g_event) != 0)
+		{
+			if(g_event.type == SDL_QUIT)
+			{
+				is_quit = true;
+			}
+		}
+		SDL_SetRenderDrawColor(g_screen, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR);
+		SDL_RenderClear(g_screen);
 
-    close();
+		g_background.Render(g_screen, NULL);
+		SDL_RenderPresent(g_screen);
+	}
+	close();
     return 0;
 }
 
