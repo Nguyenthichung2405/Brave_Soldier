@@ -4,6 +4,7 @@
 
 #include<Windows.h>
 #include<string>
+#include<vector>
 #include<SDL.h>
 #include<SDL_image.h>
 #include<SDL_mixer.h>
@@ -31,6 +32,8 @@ const int RENDER_DRAW_COLOR = 0xff;
 
 #define MAX_MAP_X 400
 #define MAX_MAP_Y 10
+
+#define STATE_MONEY 4
 
 typedef struct Input
 {
