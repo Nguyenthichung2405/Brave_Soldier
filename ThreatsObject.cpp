@@ -13,6 +13,10 @@ ThreatsObject::ThreatsObject()
 	come_back_time_ = 0;
 	frame_ = 0;
 
+	animation_a_ = 0;
+	animation_b_ = 0;
+	input_type_.left_ = 0;
+	type_move_ = STATIC_THREAT;
 }
 
 ThreatsObject::~ThreatsObject()
@@ -107,6 +111,15 @@ void ThreatsObject::Doplayer(Map& gMap)
 			y_val_ = THREAT_MAX_FALL_SPEED;
 		}
 
+		if(input_type_.left_ == 1)
+		{
+			x_val_ -= THREAT_SPEED;
+		}
+		else if(input_type_.right_ == 1)
+		{
+			x_val_ += THREAT_SPEED;
+		}
+
 		CheckToMap(gMap);
 	}
 	else if (come_back_time_ > 0)
@@ -114,11 +127,20 @@ void ThreatsObject::Doplayer(Map& gMap)
 		come_back_time_--;
 		if(come_back_time_ == 0)
 		{
-			x_val_ = 0;
+			InitThreats();
+		}
+	}
+}
+
+void ThreatsObject::InitThreats()
+{
+	x_val_ = 0;
 			y_val_ = 0;
 			if(x_pos_ > 256)
 			{
-				x_pos_ -=256;
+				x_pos_ -= 256;
+				animation_a_ -= 256;
+				animation_b_ -= 256;
 			}
 			else
 			{
@@ -126,10 +148,8 @@ void ThreatsObject::Doplayer(Map& gMap)
 			}
 			y_pos_ = 0;
 			come_back_time_ = 0;
-		}
-	}
+			input_type_.left_ = 1;
 }
-
 void ThreatsObject::CheckToMap(Map& map_data)
 {
 	int x1 = 0;
@@ -221,3 +241,35 @@ void ThreatsObject::CheckToMap(Map& map_data)
 	}
 }
 
+
+void ThreatsObject::ImpMoveType(SDL_Renderer* screen)
+{
+	if(type_move_ == STATIC_THREAT)
+	{
+	}
+	else
+	{
+		if(on_ground_ = true)
+		{
+			if(x_pos_ > animation_b_)
+			{
+				input_type_.left_ =1;
+				input_type_.right_ = 0;
+				LoadImg("img//threat_left.png", screen);
+			}
+			else if (x_pos_ < animation_a_)
+			{
+				input_type_.left_ = 0;
+				input_type_.right_ = 1;
+				LoadImg("img//threat_right.png", screen);
+			}
+		}
+		else
+		{
+			if(input_type_.left_ == 1)
+			{
+				LoadImg("img//threat_left.png", screen);
+			}
+		}
+	}
+}

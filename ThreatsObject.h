@@ -8,12 +8,17 @@
 #define THREAT_MAX_FALL_SPEED 10
 #define THREAT_GRAVITY_SPEED 0.8
 #define THREAT_FRAME_NUM 8
+#define THREAT_SPEED 3
 class ThreatsObject : public BaseObject
 {
 public:
 	ThreatsObject();
 	~ThreatsObject();
-
+	enum TypeMove
+	{
+		STATIC_THREAT = 0,
+		MOVE_IN_SPACE_THREAT = 1,
+	};
 	void set_x_val(const float& xVal) {x_val_ = xVal;}
 	void set_y_val(const float& yVal) {y_val_ = yVal;}
 
@@ -30,6 +35,11 @@ public:
 	int get_height_frame() const {return height_frame_;}
 	void Doplayer(Map& gMap);
 	void CheckToMap(Map& gMap);
+	void InitThreats();
+	void set_type_move(const int& typeMove) {type_move_ = typeMove;}
+	void SetAnimationPos(const int& pos_a, const int& pos_b) {animation_a_ = pos_a, animation_b_ = pos_b;}
+	void set_input_left(const int& ipleft) {input_type_.left_ = ipleft;};
+	void ImpMoveType(SDL_Renderer* screen);
 
 private:
 	int map_x_;
@@ -45,6 +55,10 @@ private:
 	int height_frame_;
 	int frame_;
 
+	int type_move_;
+	int animation_a_;
+	int animation_b_;
+	Input input_type_;
 };
 
 #endif
