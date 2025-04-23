@@ -163,7 +163,17 @@ void MainObject::HandelInputAction(SDL_Event events, SDL_Renderer* screen)
 		{
 			BulletObject* p_bullet = new BulletObject();
 			p_bullet->LoadImg("img//player_bullet.png", screen);
-			p_bullet->SetRect(this->rect_.x + width_frame_- 20, rect_.y + height_frame_*0.3);
+			if(status_ == WALK_LEFT)
+			{
+				p_bullet->set_bullet_dir(BulletObject::DIR_LEFT);
+				p_bullet->SetRect(this->rect_.x, rect_.y + height_frame_*0.25);
+			}
+			else
+			{
+				p_bullet->set_bullet_dir(BulletObject::DIR_RIGHT);
+				p_bullet->SetRect(this->rect_.x + width_frame_- 20, rect_.y + height_frame_*0.25);
+			}
+			
 			p_bullet->set_x_val(20);
 			p_bullet->set_is_move(true);
 
@@ -327,7 +337,7 @@ void MainObject::CheckToMap(Map& map_data)
 				on_ground_ = true;
 				if (status_ == WALK_NONE)
 				{
-					status_ == WALK_RIGHT;
+					status_ = WALK_RIGHT;
 				}	
 			}
 		}
