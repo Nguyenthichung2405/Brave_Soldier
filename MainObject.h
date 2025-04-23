@@ -48,5 +48,7 @@ private:
 	
 	int map_x_;
 	int map_y_;
+
+	int come_back_time_;
 };
 #endif
