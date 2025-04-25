@@ -34,6 +34,8 @@ public:
 	void Show(SDL_Renderer* des);
 	int get_width_frame() const {return width_frame_;}
 	int get_height_frame() const {return height_frame_;}
+
+	
 	void Doplayer(Map& gMap);
 	void CheckToMap(Map& gMap);
 	void InitThreats();
@@ -42,13 +44,14 @@ public:
 	void SetAnimationPos(const int& pos_a, const int& pos_b) {animation_a_ = pos_a, animation_b_ = pos_b;}
 	void set_input_left(const int& ipleft) {input_type_.left_ = ipleft;};
 	void ImpMoveType(SDL_Renderer* screen);
-	
+	SDL_Rect GetRectFrame();
+
 	std::vector<BulletObject*> get_bullet_list() const {return bullet_list_;}
 	void set_bullet_list(const std::vector<BulletObject*>& bl_list) { bullet_list_ = bl_list;}
 
 	void InitBullet(BulletObject* p_bullet, SDL_Renderer* screen);
 	void MakeBullet(SDL_Renderer* screen, const int& x_limit, const int& y_limit);
-
+	void RemoveBullet(const int& idx);
 private:
 	int map_x_;
 	int map_y_;

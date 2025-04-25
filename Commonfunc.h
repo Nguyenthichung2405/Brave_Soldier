@@ -58,6 +58,6 @@ typedef struct Map
 
 namespace SDLCommonfunc
 {
-	bool CheckCollision(const SDL_Rect& object1, const SDL_Rect& pbject);
+	bool CheckCollision(const SDL_Rect& object1, const SDL_Rect& object2);
 }
 #endif

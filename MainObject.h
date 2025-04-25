@@ -9,7 +9,7 @@
 #define GRAVITY_SPEED 0.8
 #define MAX_FALL_SPEED 10
 #define PLAYER_SPEED 8
-#define PLAYER_JUMP_VAL 20
+#define PLAYER_JUMP_VAL 18
 
 class MainObject : public BaseObject
 {
@@ -34,6 +34,7 @@ public:
 	void SetMapXY(const int map_x, const int map_y){map_x_ = map_x; map_y_ = map_y;}
 	void CenterEntityOnMap(Map& map_data);
 	void UpdateImagePlayer(SDL_Renderer* des);
+	SDL_Rect GetRectFrame();
 
 	void set_bullet_list(std::vector<BulletObject*> bullet_list)
 	{
@@ -43,6 +44,9 @@ public:
 	void HandleBullet(SDL_Renderer* des);
 	void RemoveBullet(const int& idx);
 	void IncreaseMoney();
+	int get_frame_width() const { return width_frame_;}
+	int get_frame_height() const { return height_frame_;}
+	void set_comeback_time(const int& cb_time) {come_back_time_ = cb_time;}
 private:
 	int money_count;
 	std::vector<BulletObject*> p_bullet_list_;

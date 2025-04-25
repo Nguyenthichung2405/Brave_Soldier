@@ -40,6 +40,17 @@ bool MainObject::LoadImg(std::string path, SDL_Renderer* screen)
 	return ret;
 }
 
+SDL_Rect MainObject::GetRectFrame()
+{
+	SDL_Rect  rect;
+	rect.x = rect_.x;
+	rect.y = rect_.y;
+	rect.w = width_frame_;
+	rect.h = height_frame_;
+
+	return rect;
+}
+
 void MainObject::set_clips()
 {
 	if(width_frame_ > 0 && height_frame_ >0)
@@ -164,8 +175,8 @@ void MainObject::HandelInputAction(SDL_Event events, SDL_Renderer* screen)
 		else if(events.button.button == SDL_BUTTON_LEFT)
 		{
 			BulletObject* p_bullet = new BulletObject();
-			p_bullet->set_bullet_type(BulletObject::SPHERE_BULLET);
-			p_bullet->LoadImgBullet(screen);
+			p_bullet->LoadImg("img//sphere_bullet.png", screen);
+
 			if(status_ == WALK_LEFT)
 			{
 				p_bullet->set_bullet_dir(BulletObject::DIR_LEFT);
@@ -178,7 +189,6 @@ void MainObject::HandelInputAction(SDL_Event events, SDL_Renderer* screen)
 			}
 			
 			p_bullet->set_x_val(20);
-			p_bullet->set_y_val(20);
 			p_bullet->set_is_move(true);
 			p_bullet_list_.push_back(p_bullet);
 		}
@@ -199,7 +209,7 @@ void MainObject::HandleBullet(SDL_Renderer* des)
 			}
 			else
 			{
-				p_bullet_list_.erase(p_bullet_list_.begin()+ i);
+				p_bullet_list_.erase(p_bullet_list_.begin() + i);
 				if(p_bullet != NULL)
 				{
 					delete p_bullet;
