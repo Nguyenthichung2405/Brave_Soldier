@@ -18,7 +18,7 @@ bool InitData()
 	if (ret < 0) return false;
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
 
-	g_window = SDL_CreateWindow("Game Cpp SDL 2.0 Blog: Chinn Chinn",
+	g_window = SDL_CreateWindow("Game Brave Soldier",
 		                          SDL_WINDOWPOS_UNDEFINED, 
 								  SDL_WINDOWPOS_UNDEFINED, 
 								  SCREEN_WIDTH, SCREEN_HEIGHT,
@@ -87,11 +87,11 @@ std::vector<ThreatsObject*> MakeThreatList()
 			list_threats.push_back(p_threat);
 		}
 	}
-	ThreatsObject* threats_onjs = new ThreatsObject[20];
+	ThreatsObject* threats_objs = new ThreatsObject[20];
 
 	for(int i = 0; i < 20; i++)
 	{
-		ThreatsObject* p_threat = (threats_onjs + i);
+		ThreatsObject* p_threat = (threats_objs + i);
 		if(p_threat != NULL)
 		{
 			p_threat->LoadImg("img/threat_level.png", g_screen);
@@ -100,6 +100,9 @@ std::vector<ThreatsObject*> MakeThreatList()
 			p_threat->set_y_pos(250);
 			p_threat->set_type_move(ThreatsObject::STATIC_THREAT);
 			p_threat->set_input_left(0);
+
+			BulletObject* p_bullet = new BulletObject();
+			p_threat->InitBullet(p_bullet, g_screen);
 			list_threats.push_back(p_threat);
 		}
 	}
@@ -150,7 +153,7 @@ int main(int argc, char* argv[])
 		game_map.SetMap(map_data);
 		game_map.DrawMap(g_screen);
 
-		for(int i = 0; i<threats_list.size(); i++)
+		for(int i = 0; i < threats_list.size(); i++)
 		{
 			ThreatsObject* p_threat = threats_list.at(i);
 			if(p_threat != NULL)
@@ -158,12 +161,41 @@ int main(int argc, char* argv[])
 				p_threat->SetMapXY(map_data.start_x_, map_data.start_y_);
 				p_threat->ImpMoveType(g_screen);
 				p_threat->Doplayer(map_data);
+				p_threat->MakeBullet(g_screen, SCREEN_WIDTH, SCREEN_HEIGHT);
 				p_threat->Show(g_screen);
-
-
 			}
 		}
 
+		std::vector<BulletObject*> bullet_arr = p_player.get_bullet_list();
+		for(int r = 0; r < bullet_arr.size(); ++r)
+		{
+			BulletObject* p_bullet = bullet_arr.at(r);
+			if(p_bullet != NULL)
+			{
+				for(int t = 0; threats_list.size(); ++t)
+				{
+					ThreatsObject* obj_threat = threats_list.at(t);
+					if(obj_threat != NULL)
+					{
+						SDL_Rect tRect;
+						tRect.x = obj_threat->GetRect().x;
+						tRect.y = obj_threat->GetRect().y;
+						tRect.w = obj_threat->get_width_frame();
+						tRect.h = obj_threat->get_height_frame();
+
+						SDL_Rect bRect = p_bullet->GetRect();
+						
+						bool bCol = SDLCommonfunc::CheckCollision(bRect, tRect);
+						if(bCol)
+						{
+							p_player.RemoveBullet(r);
+							obj_threat->Free();
+							threats_list.erase(threats_list.begin() + t);
+						}
+					}
+				}
+			}
+		}
 
 		SDL_RenderPresent(g_screen);
 
@@ -177,6 +209,18 @@ int main(int argc, char* argv[])
 				SDL_Delay(delay_time);
 		}
 	}
+
+	for (int i = 0; i< threats_list.size(); i++)
+	{
+		ThreatsObject* p_threat = threats_list.at(i);
+		if(p_threat)
+		{
+			p_threat->Free();
+			p_threat = NULL;
+		}
+	}
+
+	threats_list.clear();
 	close();
     return 0;
 }

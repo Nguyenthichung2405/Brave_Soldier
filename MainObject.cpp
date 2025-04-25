@@ -155,17 +155,17 @@ void MainObject::HandelInputAction(SDL_Event events, SDL_Renderer* screen)
 		}
 	}
 
-	if (events.type == SDL_KEYDOWN)
+	if (events.type == SDL_MOUSEBUTTONDOWN)
 	{
-		if(events.key.keysym.sym == SDLK_SPACE)
+		if(events.button.button == SDL_BUTTON_RIGHT)
 		{
 			input_type_.jump_ = 1;
 		}
-		else if(events.key.keysym.sym == SDLK_z)
+		else if(events.button.button == SDL_BUTTON_LEFT)
 		{
 			BulletObject* p_bullet = new BulletObject();
-			p_bullet->set_bullet_type(BulletObject::LASER_BULLET);
-			p_bullet->LoadImgBullet( screen);
+			p_bullet->set_bullet_type(BulletObject::SPHERE_BULLET);
+			p_bullet->LoadImgBullet(screen);
 			if(status_ == WALK_LEFT)
 			{
 				p_bullet->set_bullet_dir(BulletObject::DIR_LEFT);
@@ -211,7 +211,20 @@ void MainObject::HandleBullet(SDL_Renderer* des)
 }
 
 
-
+void MainObject::RemoveBullet(const int& idx)
+{
+	int size = p_bullet_list_.size();
+	if(size > 0 && idx < size)
+	{
+		BulletObject* p_bullet = p_bullet_list_.at(idx);
+		p_bullet_list_.erase(p_bullet_list_.begin() + idx);
+		if(p_bullet)
+		{
+			delete p_bullet;
+			p_bullet = NULL;
+		}
+	}
+}
 
 void MainObject::DoPlayer(Map& map_data)
 {
