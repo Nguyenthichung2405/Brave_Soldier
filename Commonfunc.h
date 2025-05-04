@@ -2,6 +2,7 @@
 #ifndef COMMON_FUNCTION_H_
 #define COMMON_FUNCTION_H_
 
+#include<iostream>
 #include<Windows.h>
 #include<string>
 #include<vector>
@@ -13,6 +14,11 @@
 static SDL_Window* g_window = NULL;
 static SDL_Renderer* g_screen = NULL;
 static SDL_Event g_event;
+
+// Audio
+static Mix_Chunk* g_sound_bullet = NULL;
+static Mix_Chunk* g_sound_explosion = NULL;
+static Mix_Music* g_sound_background = NULL;
 
 //Screen
 const int FRAME_PER_SECOND = 25; //fps

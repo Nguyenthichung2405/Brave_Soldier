@@ -1,4 +1,4 @@
-// SDL2Game.cpp : Defines the entry point for the console application.
+﻿// SDL2Game.cpp : Defines the entry point for the console application.
 //
 
 #include "stdafx.h"
@@ -20,6 +20,27 @@ bool InitData()
 	bool success = true;
 	int ret = SDL_Init(SDL_INIT_VIDEO);
 	if (ret < 0) return false;
+
+	 if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096) == -1)
+	 {
+        return false;
+    }
+
+    g_sound_background = Mix_LoadMUS("sound//backsound.mid");
+    if (g_sound_background == NULL) {
+        SDL_DestroyRenderer(g_screen);
+        SDL_DestroyWindow(g_window);
+        IMG_Quit();
+        TTF_Quit();
+        return false;
+    }
+
+    // Phát nhạc ngay sau khi tải
+    if (Mix_PlayMusic(g_sound_background, -1) == -1) {
+        return false;
+    }
+
+
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
 
 	g_window = SDL_CreateWindow("Game Brave Soldier",
@@ -54,6 +75,26 @@ bool InitData()
 			success = false;
 		}
 	}
+
+	 g_sound_bullet = Mix_LoadWAV("sound//bullet.wav");
+    if (g_sound_bullet == NULL) 
+	{
+        SDL_DestroyRenderer(g_screen);
+        SDL_DestroyWindow(g_window);
+        IMG_Quit();
+        TTF_Quit();
+        return false;
+    }
+
+    g_sound_explosion = Mix_LoadWAV("sound//explosion.wav");
+    if (g_sound_explosion == NULL) 
+	{
+        SDL_DestroyRenderer(g_screen);
+        SDL_DestroyWindow(g_window);
+        IMG_Quit();
+        TTF_Quit();
+        return false;
+    }
 	return success;
 }
 
@@ -74,6 +115,11 @@ void close()
 
 	SDL_DestroyWindow(g_window);
 	g_window = NULL;
+
+    Mix_HaltMusic();
+    Mix_FreeMusic(g_sound_background);
+    Mix_CloseAudio();
+
 	IMG_Quit();
 	SDL_Quit();
 }

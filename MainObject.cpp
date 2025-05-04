@@ -166,13 +166,13 @@ void MainObject::HandelInputAction(SDL_Event events, SDL_Renderer* screen)
 		}
 	}
 
-	if (events.type == SDL_MOUSEBUTTONDOWN)
+	if (events.type == SDL_KEYDOWN)
 	{
-		if(events.button.button == SDL_BUTTON_RIGHT)
+		if(events.key.keysym.sym == SDLK_z)
 		{
 			input_type_.jump_ = 1;
 		}
-		else if(events.button.button == SDL_BUTTON_LEFT)
+		else if(events.key.keysym.sym == SDLK_x)
 		{
 			BulletObject* p_bullet = new BulletObject();
 			p_bullet->LoadImg("img//sphere_bullet.png", screen);
